@@ -19,6 +19,12 @@ document.addElementById("cart__items").innerHTML();
 var articlePrice = (productPrice * numberOfProduct);
 
 // calcul prix panier
-var panierPrice = (articlePrice + articlePrice1)
+if (panier=1){
+  var panierPrice=articlePrice
+}
+else if (panier>1){
+  var panierPrice = (articlePrice + articlePrice1)
+};
+return panierPrice;
 
 //
