@@ -73,6 +73,10 @@ const products = [
   }
 ];
 
+// récupération des données
+
+
+// Boucle d'envoi des produits en html
 for (let i=0;i<=products.length;i++){
   //console.log(products[i]);
   //document.getElementById("items").innerHTML+=products[i]._id;
@@ -84,12 +88,16 @@ for (let i=0;i<=products.length;i++){
       '<p class="productDescription">'+products[i].description+'</p>'+
     '</article>'+
   '</a>';
+};
+
+//Au clic stocker les valeurs produits
+document.addEventListener("onclick,")
+
+//envoie des couleurs
+for (let i=0;i<=colors.length;i++){
+  document.getElementById("colors").innerHTML+=
+  '<option value="'+productsave[i].colors+'">+"'+productsave[i].colors+'"+</option>';
 }
-
-
-
-// récupération des données
-
 
 
 // envoie des données en html
