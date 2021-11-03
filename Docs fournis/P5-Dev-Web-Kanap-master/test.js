@@ -72,14 +72,12 @@ const products = [
     "altTxt": "Photo d'un canapé rose, trois places"
   }
 ];
-
+// PAGE INDEX
 // récupération des données
 
 
 // Boucle d'envoi des produits en html
 for (let i=0;i<=products.length;i++){
-  //console.log(products[i]);
-  //document.getElementById("items").innerHTML+=products[i]._id;
   document.getElementById("items").innerHTML+=
   '<a href="./product.html?id=42">'+
     '<article>'+
@@ -90,8 +88,9 @@ for (let i=0;i<=products.length;i++){
   '</a>';
 };
 
+//PAGE PRODUCT
 //Au clic stocker les valeurs produits
-document.addEventListener("onclick,")
+document.addEventListener("onClick" ,""); //second argument ?
 
 //envoie des couleurs
 for (let i=0;i<=colors.length;i++){
@@ -99,9 +98,20 @@ for (let i=0;i<=colors.length;i++){
   '<option value="'+productsave[i].colors+'">+"'+productsave[i].colors+'"+</option>';
 }
 
+function htmlProduct(a, b){ //bien fait ?
+  document.getElementById(a).innnerHTML+=
+  b;
+};
 
-// envoie des données en html
-document.getElementById("cart__items").innerHTML();
+//probleme classe ?
+htmlProduct("item__img", "'<img src="+productsave[i].imageUrl+"'+'alt="+productsave[i].altTxt+">'");
+
+htmlProduct("title", "'+productsave[i].name+'");
+
+htmlProduct("price", "'+productsave[i].price+'");
+
+htmlProduct("description", "'+productsave[i].description+'");
+
 
 // calcul prix article
 let articlePrice = (productPrice * numberOfProduct);
