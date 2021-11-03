@@ -79,7 +79,7 @@ const products = [
 // Boucle d'envoi des produits en html
 for (let i=0;i<=products.length;i++){
   document.getElementById("items").innerHTML+=
-  '<a href="./product.html?id=42">'+
+  '<a href="./product.html?id='+products[i]._id+'">'+
     '<article>'+
       '<img src="'+products[i].imageUrl+'" alt="'+products[i].altTxt+'+'+products[i].name+'">'+
       '<h3 class="productName">'+products[i].name+'</h3>'+
@@ -87,31 +87,6 @@ for (let i=0;i<=products.length;i++){
     '</article>'+
   '</a>';
 };
-
-//PAGE PRODUCT
-//Au clic stocker les valeurs produits
-document.addEventListener("onClick" ,""); //second argument ?
-
-//envoie des couleurs
-for (let i=0;i<=colors.length;i++){
-  document.getElementById("colors").innerHTML+=
-  '<option value="'+productsave[i].colors+'">+"'+productsave[i].colors+'"+</option>';
-}
-
-function htmlProduct(a, b){ //bien fait ?
-  document.getElementById(a).innnerHTML+=
-  b;
-};
-
-//probleme classe ?
-htmlProduct("item__img", "'<img src="+productsave[i].imageUrl+"'+'alt="+productsave[i].altTxt+">'");
-
-htmlProduct("title", "'+productsave[i].name+'");
-
-htmlProduct("price", "'+productsave[i].price+'");
-
-htmlProduct("description", "'+productsave[i].description+'");
-
 
 // calcul prix article
 let articlePrice = (productPrice * numberOfProduct);
