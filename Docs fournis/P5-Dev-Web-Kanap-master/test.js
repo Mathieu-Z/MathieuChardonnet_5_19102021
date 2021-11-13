@@ -89,15 +89,13 @@ for (let i=0;i<=products.length;i++){
 };
 
 // calcul prix article
-let articlePrice = (productPrice * numberOfProduct);
+// let articlePrice = (productPrice * numberOfProduct);
 
 // calcul prix panier
-if (panier=1){
+/*if (panier=1){
   let panierPrice=articlePrice
 }
 else if (panier>1){
   let panierPrice = (articlePrice + articlePrice1)
-};
+};*/
 // return panierPrice;
-
-//

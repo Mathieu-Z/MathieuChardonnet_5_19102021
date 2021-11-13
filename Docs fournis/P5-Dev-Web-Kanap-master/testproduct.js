@@ -74,8 +74,8 @@ const products = [
   ];
 
 // Boucle d'envoi des produits en html
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
+let queryString = window.location.search;
+let urlParams = new URLSearchParams(queryString);
 let sid = urlParams.get('id');
 
 let product=false;
@@ -89,6 +89,36 @@ function htmlProduct(a, b){
     document.getElementById(a).innerHTML+= b;
 };
 
+Storage.prototype.setObj = function(key, obj) {
+  return this.setItem(key, JSON.stringify(obj))
+} 
+Storage.prototype.getObj = function(key) {
+  return JSON.parse(this.getItem(key))
+}
+
+function gestionPanier(productId, quantity){
+  if(!localStorage.getObj("panier")){
+    localStorage.setObj("panier",[]);
+  }
+  let panier= localStorage.getObj("panier");
+  //faire une boucle pour les produits, et un ajout de quantité
+  if(quantity=>1){
+    let exist = false
+    for (let k=0;k<panier.length;k++){
+      if(panier[k].id === productId){
+        exist = k;
+      }
+    }
+    if(exist!==false){
+      panier[exist].quantity = parseInt(panier[exist].quantity) + parseInt(quantity);
+    }
+    else{
+      panier.push({"id":productId,"quantity":quantity});
+    }
+  }
+  localStorage.setObj("panier",panier);
+}
+
 if(product!==false){
     for (let j=0;j<product.colors.length;j++){
         document.getElementById("colors").innerHTML+=
@@ -96,24 +126,20 @@ if(product!==false){
     }
 //htmlProduct("item__img", "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'");
     document.getElementsByClassName("item__img").innerHTML+=
-    "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'"
+    "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'";
 
     htmlProduct("title", product.name);
 
     htmlProduct("price", product.price);
 
     htmlProduct("description", product.description);
+    document.getElementById("addToCart").addEventListener("click", event=>{
+      gestionPanier(product._id, document.getElementById("quantity").value
+      );
+    });
 }
 else{
     // gère la redirection si produit inexistant
-    //window.location = "./index.html"
+    window.location = "./index.html"
 }
-
-//PAGE PRODUCT
-//Au clic stocker les valeurs produits
-//document.addEventListener("onClick" ,""); //second argument ?
-
-
-
-
 
