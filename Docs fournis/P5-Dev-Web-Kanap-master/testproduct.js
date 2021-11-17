@@ -101,7 +101,6 @@ function gestionPanier(productId, quantity){
     localStorage.setObj("panier",[]);
   }
   let panier= localStorage.getObj("panier");
-  //faire une boucle pour les produits, et un ajout de quantité
   if(quantity=>1){
     let exist = false
     for (let k=0;k<panier.length;k++){
