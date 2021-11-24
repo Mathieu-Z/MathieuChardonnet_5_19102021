@@ -106,17 +106,16 @@ if(localStorage.getObj("panier") !== undefined){
   
 // Boucle d'envoi des produits dans le panier en html
 let total=0;
-for (let i=0; i<=localStorage.getObj("panier").length; i++){
+for (let i=0; i<localStorage.getObj("panier").length; i++){
   let totalItem=0;
   let product=false;
-  for (let j=0;j<=products.length;j++){
-    if(localStorage.getObj("panier")[i] !== undefined){
+  for (let j=0;j<products.length;j++){
+    if(localStorage.getObj("panier")[i] !== undefined && products[j]._id !== undefined){
       if(products[j]._id == localStorage.getObj("panier")[i].id){
         product=products[j];
       }
     }
   };
-  console.log(product,i,j)
   totalItem=parseInt(localStorage.getObj("panier")[i].quantity)*product.price;
   total+=totalItem;
   document.getElementById("cart__items").innerHTML+=
@@ -140,7 +139,6 @@ for (let i=0; i<=localStorage.getObj("panier").length; i++){
       '</div>'+
     '</div>'+
   '</article>';
-
 }
 
 document.getElementById("totalQuantity").innerHTML+='';
@@ -149,7 +147,15 @@ document.getElementById("totalPrice").innerHTML=total;
 
 document.getElementById("firstNameErrorMsg").innerHTML+='';
 
-document.getElementsByClassName("deleteItem").addEventListener("click",event=>{
-  //for();
-});
-}
+let deleteItem = document.getElementsByClassName("deleteItem");
+for (l=0; l<deleteItem.length; l++){
+  deleteItem[l].addEventListener("click", function(){
+  //deleteItem.parentNode.parentNode.dataset.id
+    console.log(deleteItem[l])
+/*    for(k=0; k<=localStorage.getObj("panier").length; k++){
+      if(products[k]._id == localStorage.getObj("panier")[k].id){
+        localStorage.removeItem("panier")[k];
+      }
+    }*/
+  });
+}}
