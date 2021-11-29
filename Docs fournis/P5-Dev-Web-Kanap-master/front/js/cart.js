@@ -152,10 +152,10 @@ for (l=0; l<deleteItem.length; l++){
   deleteItem[l].addEventListener("click", function(){
   //deleteItem.parentNode.parentNode.dataset.id
     console.log(deleteItem[l])
-/*    for(k=0; k<=localStorage.getObj("panier").length; k++){
+    for(k=0; k<=localStorage.getObj("panier").length; k++){
       if(products[k]._id == localStorage.getObj("panier")[k].id){
         localStorage.removeItem("panier")[k];
       }
-    }*/
+    }
   });
 }}

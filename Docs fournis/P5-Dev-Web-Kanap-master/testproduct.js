@@ -119,26 +119,24 @@ function gestionPanier(productId, quantity){
 }
 
 if(product!==false){
-    for (let j=0;j<product.colors.length;j++){
-        document.getElementById("colors").innerHTML+=
-        '<option value="'+product.colors[j]+'">'+product.colors[j]+'</option>';
-    }
-//htmlProduct("item__img", "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'");
-    document.getElementsByClassName("item__img").innerHTML+=
-    "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'";
+  for (let j=0;j<product.colors.length;j++){
+    document.getElementById("colors").innerHTML+=
+    '<option value="'+product.colors[j]+'">'+product.colors[j]+'</option>';
+  }
+  document.getElementsByClassName("item__img").innerHTML+=
+  "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'";
 
-    htmlProduct("title", product.name);
+  htmlProduct("title", product.name);
 
-    htmlProduct("price", product.price);
+  htmlProduct("price", product.price);
 
-    htmlProduct("description", product.description);
-    document.getElementById("addToCart").addEventListener("click", event=>{
-      gestionPanier(product._id, document.getElementById("quantity").value
-      );
-    });
+  htmlProduct("description", product.description);
+    
+  document.getElementById("addToCart").addEventListener("click", event=>{
+    gestionPanier(product._id, document.getElementById("quantity").value /*ajouter couleur*/);
+  });
 }
 else{
-    // gère la redirection si produit inexistant
-    window.location = "./index.html"
+  // gère la redirection si produit inexistant
+  window.location = "./index.html"
 }
-
