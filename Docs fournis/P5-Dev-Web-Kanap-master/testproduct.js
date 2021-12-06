@@ -71,13 +71,14 @@ const products = [
       "description": "Mauris molestie laoreet finibus. Aenean scelerisque convallis lacus at dapibus. Morbi imperdiet enim metus rhoncus.",
       "altTxt": "Photo d'un canapé rose, trois places"
     }
-  ];
+];
 
-// Boucle d'envoi des produits en html
+//
 let queryString = window.location.search;
 let urlParams = new URLSearchParams(queryString);
 let sid = urlParams.get('id');
 
+//
 let product=false;
 for (let i=0;i<products.length;i++){
     if(products[i]._id === sid){
@@ -85,6 +86,7 @@ for (let i=0;i<products.length;i++){
     }
 };
 
+//fonction pour l'envoie en html pour éviter la répétition du code
 function htmlProduct(a, b){
     document.getElementById(a).innerHTML+= b;
 };
@@ -96,7 +98,8 @@ Storage.prototype.getObj = function(key) {
   return JSON.parse(this.getItem(key))
 }
 
-function gestionPanier(productId, quantity){
+//fonction pour la gestion du panier en local storage
+function gestionPanier(productId, quantity, color){
   if(!localStorage.getObj("panier")){
     localStorage.setObj("panier",[]);
   }
@@ -108,16 +111,23 @@ function gestionPanier(productId, quantity){
         exist = k;
       }
     }
+    //
     if(exist!==false){
-      panier[exist].quantity = parseInt(panier[exist].quantity) + parseInt(quantity);
+      if(panier[exist].color === color){
+        panier[exist].quantity = parseInt(panier[exist].quantity) + parseInt(quantity);
+      }
+      else{
+        panier.push({"id":productId,"quantity":quantity,"color":color});
+      }
     }
     else{
-      panier.push({"id":productId,"quantity":quantity});
+      panier.push({"id":productId,"quantity":quantity,"color":color});
     }
   }
   localStorage.setObj("panier",panier);
 }
 
+//
 if(product!==false){
   for (let j=0;j<product.colors.length;j++){
     document.getElementById("colors").innerHTML+=
@@ -133,7 +143,7 @@ if(product!==false){
   htmlProduct("description", product.description);
     
   document.getElementById("addToCart").addEventListener("click", event=>{
-    gestionPanier(product._id, document.getElementById("quantity").value /*ajouter couleur*/);
+    gestionPanier(product._id, document.getElementById("quantity").value, document.getElementById("colors").value);
   });
 }
 else{

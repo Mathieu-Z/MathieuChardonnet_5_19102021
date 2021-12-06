@@ -1,4 +1,4 @@
-const products = [
+let products = [
   {
     "colors": ["Blue", "White", "Black"],
     "_id": "107fb5b75607497b96722bda5b504926",
@@ -80,29 +80,7 @@ Storage.prototype.getObj = function(key) {
   return JSON.parse(this.getItem(key))
 }
 
-/*function gestionPanier(productId, quantity){
-  if(!localStorage.getObj("panier")){
-    localStorage.setObj("panier",[]);
-  }
-  let panier= localStorage.getObj("panier");
-  if(quantity=>1){
-    let exist = false
-    for (let k=0;k<panier.length;k++){
-      if(panier[k].id === productId){
-        exist = k;
-      }
-    }
-    if(exist!==false){
-      panier[exist].quantity = parseInt(panier[exist].quantity) + parseInt(quantity);
-    }
-    else{
-      panier.push({"id":productId,"quantity":quantity});
-    }
-  }
-  localStorage.setObj("panier",panier);
-}*/
-
-if(localStorage.getObj("panier") !== undefined){
+//if(localStorage.getObj("panier") !== undefined){}
   
 // Boucle d'envoi des produits dans le panier en html
 let total=0;
@@ -116,8 +94,10 @@ for (let i=0; i<localStorage.getObj("panier").length; i++){
       }
     }
   };
+  //calcul du prix total
   totalItem=parseInt(localStorage.getObj("panier")[i].quantity)*product.price;
-  total+=totalItem;
+  totalPrice+=totalItem;
+  //Apparition des articles sur la page panier
   document.getElementById("cart__items").innerHTML+=
   '<article class="cart__item" data-id='+localStorage.getObj("panier")[i].id+'>'+
     '<div class="cart__item__img">'+
@@ -126,6 +106,7 @@ for (let i=0; i<localStorage.getObj("panier").length; i++){
     '<div class="cart__item__content">'+
       '<div class="cart__item__content__titlePrice">'+
         '<h2>'+product.name+'</h2>'+
+        '<p> '+localStorage.getObj("panier")[i].color+' </p>'+
         '<p> '+totalItem+' €</p>'+
       '</div>'+
       '<div class="cart__item__content__settings">'+
@@ -141,21 +122,103 @@ for (let i=0; i<localStorage.getObj("panier").length; i++){
   '</article>';
 }
 
+//renvoi la quantité total
 document.getElementById("totalQuantity").innerHTML+='';
 
-document.getElementById("totalPrice").innerHTML=total;
+//renvoi le prix total
+document.getElementById("totalPrice").innerHTML=totalPrice;
 
-document.getElementById("firstNameErrorMsg").innerHTML+='';
+//fonction pour la suppression d'un produit du panier
+function removeProductFromCart(productId){
+  for(let k=0; k<=localStorage.getObj("panier").length; k++){
+    if(localStorage.getObj("panier")[k].id == productId){
+      //console.log(localStorage.removeItem("panier")[k]);
+      localStorage.removeItem("panier")[k];      
+    }
+  }
+}
 
+//suppression d'un élément du panier
 let deleteItem = document.getElementsByClassName("deleteItem");
 for (l=0; l<deleteItem.length; l++){
-  deleteItem[l].addEventListener("click", function(){
-  //deleteItem.parentNode.parentNode.dataset.id
-    console.log(deleteItem[l])
-    for(k=0; k<=localStorage.getObj("panier").length; k++){
-      if(products[k]._id == localStorage.getObj("panier")[k].id){
-        localStorage.removeItem("panier")[k];
-      }
-    }
+  deleteItem[l].addEventListener("click", function(test){
+    removeProductFromCart(test.target.parentNode.parentNode.parentNode.parentNode.dataset.id);
+    //console.log(removeProductFromCart())
   });
-}}
+}
+
+// changement de quantité
+/*document.getElementsByClassName("itemQuantity").addEventListener("change", function(){
+    
+  }
+)
+
+var slides = getElementsByClassName("slide");
+Array.prototype.forEach.call(slides, function(slide, index) {
+    Distribute(slides.item(index));
+});*/
+
+let prenom = document.getElementById("firstName");
+let nom = document.getElementById("lastName");
+let ville = document.getElementById("city");
+let adresse = document.getElementById("address");
+let mail = document.getElementById("email")
+
+
+// email
+let emailErrorMsg = document.getElementById("emailErrorMsg");
+function validateEmail(mail) {
+  let regexMail =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (regexMail.test(mail) == false) {
+    return false;
+  } 
+  else {
+    emailErrorMsg.innerHTML = null;
+    return true;
+  }
+}
+
+
+//prénom
+let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+function validateFirstName(prenom) {
+  let regexName = /^[a-z][a-z '-.,]{1,31}$|^$/i;
+  if (regexName.test(prenom) == false) {
+    return false;
+  } else {
+    firstNameErrorMsg.innerHTML = null;
+    return true;
+  }
+}
+
+//nom
+let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+function validateLastName(nom) {
+  if (regexName.test(nom) == false) {
+    return false;
+  } else {
+    lastNameErrorMsg.innerHTML = null;
+    return true;
+  }
+}
+
+//ville
+let cityErrorMsg = document.getElementById("cityErrorMsg");
+function validateCity(ville) {
+  if (regexName.test(ville) == false) {
+    return false;
+  } else {
+    cityErrorMsg.innerHTML = null;
+    return true;
+  }
+}
+
+let contact = {
+  firstName: prenom.value,
+  lastName: nom.value,
+  address: adresse.value,
+  city: ville.value,
+  email: mail.value,
+};
+
