@@ -73,14 +73,14 @@ const products = [
     }
 ];
 
-//
+//gestion de l'url
 let queryString = window.location.search;
 let urlParams = new URLSearchParams(queryString);
 let sid = urlParams.get('id');
 
-//
+//ajoute l'id dans l'url
 let product=false;
-for (let i=0;i<products.length;i++){
+for (let i=0; i<products.length; i++){
     if(products[i]._id === sid){
         product=products[i];
     }
@@ -91,6 +91,7 @@ function htmlProduct(a, b){
     document.getElementById(a).innerHTML+= b;
 };
 
+//parametrage pour le local storage
 Storage.prototype.setObj = function(key, obj) {
   return this.setItem(key, JSON.stringify(obj))
 } 
@@ -104,14 +105,15 @@ function gestionPanier(productId, quantity, color){
     localStorage.setObj("panier",[]);
   }
   let panier= localStorage.getObj("panier");
+  //vérifie l'id de l'url pour enregistré le bon produit avec le bonne id
   if(quantity=>1){
     let exist = false
-    for (let k=0;k<panier.length;k++){
+    for (let k=0; k<panier.length; k++){
       if(panier[k].id === productId){
         exist = k;
       }
     }
-    //
+    //prend la couleur puis la quantité de la couleur
     if(exist!==false){
       if(panier[exist].color === color){
         panier[exist].quantity = parseInt(panier[exist].quantity) + parseInt(quantity);
@@ -127,21 +129,25 @@ function gestionPanier(productId, quantity, color){
   localStorage.setObj("panier",panier);
 }
 
-//
+//envoie dans l'html les différentes couleurs du produit
 if(product!==false){
-  for (let j=0;j<product.colors.length;j++){
+  for (let j=0; j<product.colors.length; j++){
     document.getElementById("colors").innerHTML+=
     '<option value="'+product.colors[j]+'">'+product.colors[j]+'</option>';
   }
+
+  //envoie dans l'html l'image et sa description
   document.getElementsByClassName("item__img").innerHTML+=
   "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'";
 
+  //envoie dans l'html en utilisant la fonction htmlProduct
   htmlProduct("title", product.name);
 
   htmlProduct("price", product.price);
 
   htmlProduct("description", product.description);
-    
+
+  //au clic sur le bouton stock les valeurs dans le local storage
   document.getElementById("addToCart").addEventListener("click", event=>{
     gestionPanier(product._id, document.getElementById("quantity").value, document.getElementById("colors").value);
   });

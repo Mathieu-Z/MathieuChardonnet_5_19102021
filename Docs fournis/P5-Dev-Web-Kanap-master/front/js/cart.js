@@ -73,30 +73,33 @@ let products = [
   }
 ];
 
+//parametrage pour le local storage
 Storage.prototype.setObj = function(key, obj) {
   return this.setItem(key, JSON.stringify(obj))
 } 
 Storage.prototype.getObj = function(key) {
   return JSON.parse(this.getItem(key))
 }
-
-//if(localStorage.getObj("panier") !== undefined){}
   
-// Boucle d'envoi des produits dans le panier en html
-let total=0;
+// Boucle d'envoi des produits dans le panier ??
 for (let i=0; i<localStorage.getObj("panier").length; i++){
-  let totalItem=0;
   let product=false;
-  for (let j=0;j<products.length;j++){
+  for (let j=0; j<products.length; j++){
     if(localStorage.getObj("panier")[i] !== undefined && products[j]._id !== undefined){
       if(products[j]._id == localStorage.getObj("panier")[i].id){
-        product=products[j];
+        product = products[j];
       }
     }
   };
+
   //calcul du prix total
-  totalItem=parseInt(localStorage.getObj("panier")[i].quantity)*product.price;
-  totalPrice+=totalItem;
+  let totalItemPrice = 0;
+  let totalPrice = 0;
+  console.log(totalPrice);
+  totalItemPrice = parseInt(localStorage.getObj("panier")[i].quantity) * product.price;
+  totalPrice += totalItemPrice;
+  console.log(totalPrice, totalItemPrice);
+
   //Apparition des articles sur la page panier
   document.getElementById("cart__items").innerHTML+=
   '<article class="cart__item" data-id='+localStorage.getObj("panier")[i].id+'>'+
@@ -107,7 +110,7 @@ for (let i=0; i<localStorage.getObj("panier").length; i++){
       '<div class="cart__item__content__titlePrice">'+
         '<h2>'+product.name+'</h2>'+
         '<p> '+localStorage.getObj("panier")[i].color+' </p>'+
-        '<p> '+totalItem+' €</p>'+
+        '<p> '+totalItemPrice+' €</p>'+
       '</div>'+
       '<div class="cart__item__content__settings">'+
         '<div class="cart__item__content__settings__quantity">'+
@@ -120,20 +123,28 @@ for (let i=0; i<localStorage.getObj("panier").length; i++){
       '</div>'+
     '</div>'+
   '</article>';
+
+  //calcul du nombre d'article
+  let totalItem = 0;
+  totalItem += parseInt(localStorage.getObj("panier")[i].quantity);
+  //renvoi la quantité total d'article
+  document.getElementById("totalQuantity").innerHTML = totalItem;
+
+  //renvoi le prix total
+  document.getElementById("totalPrice").innerHTML = totalPrice;
 }
 
-//renvoi la quantité total
-document.getElementById("totalQuantity").innerHTML+='';
-
-//renvoi le prix total
-document.getElementById("totalPrice").innerHTML=totalPrice;
-
 //fonction pour la suppression d'un produit du panier
-function removeProductFromCart(productId){
-  for(let k=0; k<=localStorage.getObj("panier").length; k++){
-    if(localStorage.getObj("panier")[k].id == productId){
-      //console.log(localStorage.removeItem("panier")[k]);
-      localStorage.removeItem("panier")[k];      
+function removeProductFromCart(productId, color){
+  let tableau = localStorage.getObj("panier");
+  for(let k=0; k<tableau.length; k++){
+    if(tableau[k].id == productId && tableau[k].color == color){
+      tableau.splice(k, 1);
+      console.log(tableau.splice(k, 1))
+      localStorage.setObj("panier", tableau);
+      console.log(tableau)
+      //window.location.reload();
+      //vérifier a coup de consolelog
     }
   }
 }
@@ -142,8 +153,8 @@ function removeProductFromCart(productId){
 let deleteItem = document.getElementsByClassName("deleteItem");
 for (l=0; l<deleteItem.length; l++){
   deleteItem[l].addEventListener("click", function(test){
-    removeProductFromCart(test.target.parentNode.parentNode.parentNode.parentNode.dataset.id);
-    //console.log(removeProductFromCart())
+    //var childNode = node.firstChild;
+    removeProductFromCart(test.target.parentNode.parentNode.parentNode.parentNode.dataset.id, test.target.parentNode.parentNode.previousNode.childNode.nextNode.color);
   });
 }
 
@@ -151,74 +162,84 @@ for (l=0; l<deleteItem.length; l++){
 /*document.getElementsByClassName("itemQuantity").addEventListener("change", function(){
     
   }
-)
+)*/
 
-var slides = getElementsByClassName("slide");
-Array.prototype.forEach.call(slides, function(slide, index) {
-    Distribute(slides.item(index));
-});*/
+//REGEX
 
-let prenom = document.getElementById("firstName");
-let nom = document.getElementById("lastName");
-let ville = document.getElementById("city");
-let adresse = document.getElementById("address");
-let mail = document.getElementById("email")
+document.getElementById("order").addEventListener("click", function(){
+  let prenom = document.getElementById("firstName").value;
+  let nom = document.getElementById("lastName").value;
+  let ville = document.getElementById("city").value;
+  let adresse = document.getElementById("address").value;
+  let mail = document.getElementById("email").value;
 
-
-// email
-let emailErrorMsg = document.getElementById("emailErrorMsg");
-function validateEmail(mail) {
-  let regexMail =
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (regexMail.test(mail) == false) {
-    return false;
-  } 
-  else {
-    emailErrorMsg.innerHTML = null;
-    return true;
+  // email
+  let emailErrorMsg = document.getElementById("emailErrorMsg");
+  function validateEmail(mail) {
+    let regexMail =
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (regexMail.test(mail) == false) {
+      return false;
+    } 
+    else {
+      emailErrorMsg.innerHTML = null;
+      return true;
+    }
   }
-}
 
-
-//prénom
-let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-function validateFirstName(prenom) {
-  let regexName = /^[a-z][a-z '-.,]{1,31}$|^$/i;
-  if (regexName.test(prenom) == false) {
-    return false;
-  } else {
-    firstNameErrorMsg.innerHTML = null;
-    return true;
+  //prénom
+  let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+  function validateFirstName(prenom) {
+    let regexName = /^[a-z][a-z '-.,]{1,31}$|^$/i;
+    if (regexName.test(prenom) == false) {
+      return false;
+    } else {
+      firstNameErrorMsg.innerHTML = null;
+      return true;
+    }
   }
-}
 
-//nom
-let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-function validateLastName(nom) {
-  if (regexName.test(nom) == false) {
-    return false;
-  } else {
-    lastNameErrorMsg.innerHTML = null;
-    return true;
+  //nom
+  let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+  function validateLastName(nom) {
+    let regexName = /^[a-z][a-z '-.,]{1,31}$|^$/i;
+    if (regexName.test(nom) == false) {
+      return false;
+    } else {
+      lastNameErrorMsg.innerHTML = null;
+      return true;
+    }
   }
-}
 
-//ville
-let cityErrorMsg = document.getElementById("cityErrorMsg");
-function validateCity(ville) {
-  if (regexName.test(ville) == false) {
-    return false;
-  } else {
-    cityErrorMsg.innerHTML = null;
-    return true;
+  //ville
+  let cityErrorMsg = document.getElementById("cityErrorMsg");
+  function validateCity(ville) {
+    let regexName = /^[a-z][a-z '-.,]{1,31}$|^$/i;
+    if (regexName.test(ville) == false) {
+      return false;
+    } else {
+      cityErrorMsg.innerHTML = null;
+      return true;
+    }
   }
-}
 
-let contact = {
-  firstName: prenom.value,
-  lastName: nom.value,
-  address: adresse.value,
-  city: ville.value,
-  email: mail.value,
-};
+  //Messages d'erreur si valeur du formulaire fausse
+  if (validateEmail(mail) == false) {
+    emailErrorMsg.innerHTML = "Entrez une adresse e-mail valide.";
+  }
+  if (validateFirstName(prenom) == false) {
+    firstNameErrorMsg.innerHTML = "Entrez un prénom valide sans chiffre.";
+  }
+  if (validateLastName(nom) == false) {
+    lastNameErrorMsg.innerHTML = "Entrez un nom valide sans chiffre.";
+  }
+  if (validateCity(ville) == false) {
+    cityErrorMsg.innerHTML = "Entrez une commune valide sans chiffre.";
+  }
+
+  //soumet le résultats à la base de données
+  if(validateEmail(mail)==true && validateFirstName(prenom)==true && validateLastName(nom)==true && validateCity(ville)==true){
+    //soumettre resultat
+  }
+});
 
