@@ -1,4 +1,4 @@
-const products = [
+/*const products = [
   {
     "colors": ["Blue", "White", "Black"],
     "_id": "107fb5b75607497b96722bda5b504926",
@@ -72,18 +72,29 @@ const products = [
     "altTxt": "Photo d'un canapé rose, trois places"
   }
 ];
+*/
+
 // PAGE INDEX
 // récupération des données
+let cardsFetch = function () {
+  fetch("http://localhost:3000/api/products")
+    .then((response) => response.json())
+    .then((products) => {
 
+      console.log(products);
 
-// Boucle d'envoi des produits en html
-for (let i=0;i<=products.length;i++){
-  document.getElementById("items").innerHTML+=
-  '<a href="./product.html?id='+products[i]._id+'">'+
-    '<article>'+
-      '<img src="'+products[i].imageUrl+'" alt="'+products[i].altTxt+'+'+products[i].name+'">'+
-      '<h3 class="productName">'+products[i].name+'</h3>'+
-      '<p class="productDescription">'+products[i].description+'</p>'+
-    '</article>'+
-  '</a>';
+    // Boucle d'envoi des produits en html
+    for (let i=0; i<=products.length; i++){
+      document.getElementById("items").innerHTML+=
+      '<a href="./product.html?id='+products[i]._id+'">'+
+        '<article>'+
+          '<img src="'+products[i].imageUrl+'" alt="'+products[i].altTxt+'+'+products[i].name+'">'+
+          '<h3 class="productName">'+products[i].name+'</h3>'+
+          '<p class="productDescription">'+products[i].description+'</p>'+
+        '</article>'+
+      '</a>';
+      };
+    });
 };
+cardsFetch();
+

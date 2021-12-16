@@ -80,7 +80,10 @@ Storage.prototype.setObj = function(key, obj) {
 Storage.prototype.getObj = function(key) {
   return JSON.parse(this.getItem(key))
 }
-  
+
+let totalPrice = 0;
+let totalItem = 0;
+
 // Boucle d'envoi des produits dans le panier ??
 for (let i=0; i<localStorage.getObj("panier").length; i++){
   let product=false;
@@ -94,20 +97,17 @@ for (let i=0; i<localStorage.getObj("panier").length; i++){
 
   //calcul du prix total
   let totalItemPrice = 0;
-  let totalPrice = 0;
-  console.log(totalPrice);
   totalItemPrice = parseInt(localStorage.getObj("panier")[i].quantity) * product.price;
   totalPrice += totalItemPrice;
-  console.log(totalPrice, totalItemPrice);
 
   //Apparition des articles sur la page panier
   document.getElementById("cart__items").innerHTML+=
-  '<article class="cart__item" data-id='+localStorage.getObj("panier")[i].id+'>'+
+  '<article class="cart__item" data-id='+localStorage.getObj("panier")[i].id+' data-color='+localStorage.getObj("panier")[i].color+'>'+
     '<div class="cart__item__img">'+
       '<img src='+localStorage.getObj("panier")[i].img+' alt='+localStorage.getObj("panier")[i].altTxt+'>'+
     '</div>'+
     '<div class="cart__item__content">'+
-      '<div class="cart__item__content__titlePrice">'+
+      '<div class="cart__item__content__description">'+
         '<h2>'+product.name+'</h2>'+
         '<p> '+localStorage.getObj("panier")[i].color+' </p>'+
         '<p> '+totalItemPrice+' €</p>'+
@@ -125,7 +125,6 @@ for (let i=0; i<localStorage.getObj("panier").length; i++){
   '</article>';
 
   //calcul du nombre d'article
-  let totalItem = 0;
   totalItem += parseInt(localStorage.getObj("panier")[i].quantity);
   //renvoi la quantité total d'article
   document.getElementById("totalQuantity").innerHTML = totalItem;
@@ -140,11 +139,8 @@ function removeProductFromCart(productId, color){
   for(let k=0; k<tableau.length; k++){
     if(tableau[k].id == productId && tableau[k].color == color){
       tableau.splice(k, 1);
-      console.log(tableau.splice(k, 1))
       localStorage.setObj("panier", tableau);
-      console.log(tableau)
-      //window.location.reload();
-      //vérifier a coup de consolelog
+      window.location.reload();
     }
   }
 }
@@ -153,16 +149,30 @@ function removeProductFromCart(productId, color){
 let deleteItem = document.getElementsByClassName("deleteItem");
 for (l=0; l<deleteItem.length; l++){
   deleteItem[l].addEventListener("click", function(test){
-    //var childNode = node.firstChild;
-    removeProductFromCart(test.target.parentNode.parentNode.parentNode.parentNode.dataset.id, test.target.parentNode.parentNode.previousNode.childNode.nextNode.color);
+    removeProductFromCart(test.target.parentNode.parentNode.parentNode.parentNode.dataset.id, test.target.parentNode.parentNode.parentNode.parentNode.dataset.color);
   });
 }
 
-// changement de quantité
-/*document.getElementsByClassName("itemQuantity").addEventListener("change", function(){
-    
+//fontion pour le changement de quantité d'un article
+function changeQuantityFromCart(productId, color, quantity){
+  let tableau = localStorage.getObj("panier");
+  for(let k=0; k<tableau.length; k++){
+    if(tableau[k].id == productId && tableau[k].color == color){
+      tableau[k].quantity = quantity
+      localStorage.setObj("panier", tableau);
+      window.location.reload();
+    }
   }
-)*/
+}
+
+// changement de quantité des articles
+let changeQuantity = document.getElementsByClassName("itemQuantity");
+for(l=0; l<changeQuantity.length; l++){
+  changeQuantity[l].addEventListener("change", function(testQuantity){
+    changeQuantityFromCart(testQuantity.target.parentNode.parentNode.parentNode.parentNode.dataset.id, testQuantity.target.parentNode.parentNode.parentNode.parentNode.dataset.color, testQuantity.target.value);
+  })
+}
+
 
 //REGEX
 
@@ -237,9 +247,12 @@ document.getElementById("order").addEventListener("click", function(){
     cityErrorMsg.innerHTML = "Entrez une commune valide sans chiffre.";
   }
 
-  //soumet le résultats à la base de données
+  //soumet le résultats à la base de données et change de page
   if(validateEmail(mail)==true && validateFirstName(prenom)==true && validateLastName(nom)==true && validateCity(ville)==true){
     //soumettre resultat
+
+
+    //renvoi a la page confirmation
+    window.location = "../html/confirmation.html"
   }
 });
-
