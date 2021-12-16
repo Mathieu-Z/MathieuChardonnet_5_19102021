@@ -11,7 +11,6 @@ let cardsFetch = function () {
   
   let randomNum = randomOrder(10000000000000000, 99999999999999999);
   document.getElementById("orderID").innerHTML = randomNum;
-  })
+  });
 };
-
 cardsFetch();
