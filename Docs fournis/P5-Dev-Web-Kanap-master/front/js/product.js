@@ -72,8 +72,8 @@ let cardsFetch = function () {
       }
 
       //envoie dans l'html l'image et sa description
-      document.getElementsByClassName("item__img").innerHTML+=
-      "'<img src="+product.imageUrl+"'+'alt="+product.altTxt+">'";
+      document.getElementsByClassName("item__img")[0].innerHTML=
+      '<img src="'+product.imageUrl+'" alt='+product.altTxt+'>';
 
       //envoie dans l'html en utilisant la fonction htmlProduct
       htmlProduct("title", product.name);

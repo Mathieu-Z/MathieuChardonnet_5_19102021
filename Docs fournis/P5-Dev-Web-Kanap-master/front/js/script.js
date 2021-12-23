@@ -8,7 +8,7 @@ let cardsFetch = function () {
       console.log(products);
 
     // Boucle d'envoi des produits en html
-    for (let i=0; i<=products.length; i++){
+    for (let i=0; i<products.length; i++){
       document.getElementById("items").innerHTML+=
       '<a href="./product.html?id='+products[i]._id+'">'+
         '<article>'+

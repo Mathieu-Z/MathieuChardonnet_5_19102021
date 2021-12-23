@@ -39,7 +39,7 @@ let cardsFetch = function () {
       document.getElementById("cart__items").innerHTML+=
       '<article class="cart__item" data-id='+localStorage.getObj("panier")[i].id+' data-color='+localStorage.getObj("panier")[i].color+'>'+
         '<div class="cart__item__img">'+
-          '<img src='+localStorage.getObj("panier")[i].img+' alt='+localStorage.getObj("panier")[i].altTxt+'>'+
+          '<img src='+product.imageUrl+' alt='+product.altTxt+'>'+
         '</div>'+
         '<div class="cart__item__content">'+
           '<div class="cart__item__content__description">'+
@@ -185,9 +185,30 @@ let cardsFetch = function () {
       //soumet le résultats à la base de données et change de page
       if(validateEmail(mail)==true && validateFirstName(prenom)==true && validateLastName(nom)==true && validateCity(ville)==true){
         //soumettre resultat
+        let contact = {
+          firstName: prenom.value,
+          lastName: nom.value,
+          address: adresse.value,
+          city: ville.value,
+          email: mail.value,
+        }
 
+        let jsonData = JSON.stringify({ contact, products });
+
+        fetch(postUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonData,
+        })
+
+        .then(data){
+          console.log(data)
+        }
+        
         //renvoi a la page confirmation
-        window.location = "../html/confirmation.html"
+        //window.location = "../html/confirmation.html"
       }
     });
   });
