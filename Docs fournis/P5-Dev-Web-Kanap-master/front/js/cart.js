@@ -193,6 +193,10 @@ let cardsFetch = function () {
           email: mail.value,
         }
 
+        let products = {
+
+        }
+
         let jsonData = JSON.stringify({ contact, products });
 
         fetch(postUrl, {
@@ -203,15 +207,21 @@ let cardsFetch = function () {
           body: jsonData,
         })
 
-        .then(data){
-          console.log(data)
-        }
+        .then((res) => res.json())
+
+        .then((products) => {
+          //localStorage.clear();
+          console.log(products)
+          //renvoi a la page confirmation
+          window.location = "../html/confirmation.html"
+        })
+
+        .catch(() => {
+          alert("Une erreur est survenue, merci de revenir plus tard.");
+        }); // alerte si erreurs
         
-        //renvoi a la page confirmation
-        //window.location = "../html/confirmation.html"
       }
     });
   });
 };
 cardsFetch();
-
