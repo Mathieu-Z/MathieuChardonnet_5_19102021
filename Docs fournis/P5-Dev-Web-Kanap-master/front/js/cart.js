@@ -111,8 +111,9 @@ let cardsFetch = function () {
 
 
     //REGEX
-
-    document.getElementById("order").addEventListener("click", function(){
+    const orderButton = document.getElementById("order");
+    orderButton.addEventListener("click", (e) => {
+      e.preventDefault();
       let prenom = document.getElementById("firstName").value;
       let nom = document.getElementById("lastName").value;
       let ville = document.getElementById("city").value;
@@ -182,44 +183,53 @@ let cardsFetch = function () {
         cityErrorMsg.innerHTML = "Entrez une commune valide sans chiffre.";
       }
 
+      let contact = [];
+
       //soumet le résultats à la base de données et change de page
       if(validateEmail(mail)==true && validateFirstName(prenom)==true && validateLastName(nom)==true && validateCity(ville)==true){
         //soumettre resultat
-        let contact = {
-          firstName: prenom.value,
-          lastName: nom.value,
-          address: adresse.value,
-          city: ville.value,
-          email: mail.value,
+        contact = {
+          firstName: prenom,
+          lastName: nom,
+          address: adresse,
+          city: ville,
+          email: mail,
         }
 
-        let products = {
+        let productsApi = [];
 
+        for (m = 0; m<localStorage.getObj("panier").length; m++){
+          for(n = 0; n<products.length; n++){
+            if(localStorage.getObj("panier")[m] !== undefined && products[n]._id !== undefined){
+              if(products[n]._id == localStorage.getObj("panier")[m].id){
+                products[n].productId = products[n]._id;
+                productsApi.push(products[n]);
+              }
+            }
+          }
         }
+        console.log(productsApi)
 
-        let jsonData = JSON.stringify({ contact, products });
+        let jsonData = JSON.stringify({ contact, products : productsApi });
 
-        fetch(postUrl, {
+        fetch("http://localhost:3000/api/products/order", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: jsonData,
         })
-
         .then((res) => res.json())
-
-        .then((products) => {
+        .then((data) => {
+          //enleve les produits du panier
           //localStorage.clear();
-          console.log(products)
+          console.log(data)
           //renvoi a la page confirmation
-          window.location = "../html/confirmation.html"
+          //window.location = "../html/confirmation.html"
         })
-
-        .catch(() => {
-          alert("Une erreur est survenue, merci de revenir plus tard.");
-        }); // alerte si erreurs
-        
+        .catch(function(error) {
+          console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
+        });
       }
     });
   });
