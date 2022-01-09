@@ -19,7 +19,7 @@ let cardsFetch = function () {
     let totalPrice = 0;
     let totalItem = 0;
 
-    // Boucle d'envoi des produits dans le panier ??
+    // Boucle d'envoi des produits dans le panier
     for (let i=0; i<localStorage.getObj("panier").length; i++){
       let product=false;
       for (let j=0; j<products.length; j++){
@@ -185,6 +185,10 @@ let cardsFetch = function () {
 
       let contact = [];
 
+      let productId = 0;
+
+      let productsApi = [];
+
       //soumet le résultats à la base de données et change de page
       if(validateEmail(mail)==true && validateFirstName(prenom)==true && validateLastName(nom)==true && validateCity(ville)==true){
         //soumettre resultat
@@ -196,14 +200,14 @@ let cardsFetch = function () {
           email: mail,
         }
 
-        let productsApi = [];
-
         for (m = 0; m<localStorage.getObj("panier").length; m++){
           for(n = 0; n<products.length; n++){
             if(localStorage.getObj("panier")[m] !== undefined && products[n]._id !== undefined){
               if(products[n]._id == localStorage.getObj("panier")[m].id){
                 products[n].productId = products[n]._id;
-                productsApi.push(products[n]);
+                productsApi.push({
+                  'productId' : products[n]._id,
+                });
               }
             }
           }
@@ -212,7 +216,7 @@ let cardsFetch = function () {
 
         let jsonData = JSON.stringify({ contact, products : productsApi });
 
-        fetch("http://localhost:3000/api/products/order", {
+        fetch("http://localhost:3000/api/products/order/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
