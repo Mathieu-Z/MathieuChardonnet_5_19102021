@@ -91,13 +91,18 @@ let cardsFetch = function () {
 
     //fontion pour le changement de quantité d'un article
     function changeQuantityFromCart(productId, color, quantity){
-      let tableau = localStorage.getObj("panier");
-      for(let k=0; k<tableau.length; k++){
-        if(tableau[k].id == productId && tableau[k].color == color){
-          tableau[k].quantity = quantity
-          localStorage.setObj("panier", tableau);
-          window.location.reload();
+      if(quantity > 0){
+        let tableau = localStorage.getObj("panier");
+        for(let k=0; k<tableau.length; k++){
+          if(tableau[k].id == productId && tableau[k].color == color){
+            tableau[k].quantity = quantity
+            localStorage.setObj("panier", tableau);
+            window.location.reload();
+          }
         }
+      }
+      else{
+        alert("la quantité ne peut pas être égale à 0, cliquez sur le bouton supprimer si vous ne voulez plus de ce produit.");
       }
     }
 
@@ -205,18 +210,16 @@ let cardsFetch = function () {
             if(localStorage.getObj("panier")[m] !== undefined && products[n]._id !== undefined){
               if(products[n]._id == localStorage.getObj("panier")[m].id){
                 products[n].productId = products[n]._id;
-                productsApi.push({
-                  'productId' : products[n]._id,
-                });
+                productsApi.push(products[n]._id);
               }
             }
           }
         }
-        console.log(productsApi)
 
         let jsonData = JSON.stringify({ contact, products : productsApi });
 
-        fetch("http://localhost:3000/api/products/order/", {
+        // envoi des données à l'API
+        fetch(("http://localhost:3000/api/products/order"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -224,12 +227,11 @@ let cardsFetch = function () {
           body: jsonData,
         })
         .then((res) => res.json())
-        .then((data) => {
+        .then((order) => {
           //enleve les produits du panier
-          //localStorage.clear();
-          console.log(data)
+          localStorage.clear();
           //renvoi a la page confirmation
-          //window.location = "../html/confirmation.html"
+          window.location = "../html/confirmation.html?orderId="+order.orderId
         })
         .catch(function(error) {
           console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
