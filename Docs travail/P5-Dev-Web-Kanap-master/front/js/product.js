@@ -84,7 +84,12 @@ let cardsFetch = function () {
 
       //au clic sur le bouton stock les valeurs dans le local storage
       document.getElementById("addToCart").addEventListener("click", event=>{
-        gestionPanier(product._id, document.getElementById("quantity").value, document.getElementById("colors").value);
+        if(document.getElementById("quantity").value >0 && document.getElementById("colors").length >0){
+          gestionPanier(product._id, document.getElementById("quantity").value, document.getElementById("colors").value);
+        }
+        else{
+          alert("Veuillez selectionner une couleur et une quantité valide");
+        }
       });
     }
     else{
